@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import re
 
 
 class BbcGoodFoodStarturlsSpider(scrapy.Spider):
@@ -8,4 +9,7 @@ class BbcGoodFoodStarturlsSpider(scrapy.Spider):
     start_urls = ['http://bbcgoodfood.com/']
 
     def parse(self, response):
-        pass
+        # collect all /recipes/ urls and make new request
+        # check if they have the recipe title class
+        # save url as recipe if recipe title class is in html
+        # then save an is_recipe = True in the item

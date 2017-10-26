@@ -8,4 +8,8 @@
 
 class FakeFoodSpiderPipeline(object):
     def process_item(self, item, spider):
+        """
+        Lets process a recipe item, we need to store it in the db
+        """
+        
         return item
