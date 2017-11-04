@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import re
 
 
 class BbcGoodFoodStarturlsSpider(scrapy.Spider):
@@ -13,3 +12,12 @@ class BbcGoodFoodStarturlsSpider(scrapy.Spider):
         # check if they have the recipe title class
         # save url as recipe if recipe title class is in html
         # then save an is_recipe = True in the item
+
+        for link in response.xpath('//a'):
+            next_page_link = link.xpath('@href').extract_first()
+            if '/recipes/' in next_page_link:
+                yield response.urljoin(next_page_link))
+
+
+    def parse_recipes(self, response):
+        # check if Recipe name at the top
