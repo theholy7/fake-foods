@@ -4,6 +4,9 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+from .connection import db
+from .database import StartUrl
+from .items import FakeFoodStartURL
 
 
 class FakeFoodSpiderPipeline(object):
@@ -11,5 +14,26 @@ class FakeFoodSpiderPipeline(object):
         """
         Lets process a recipe item, we need to store it in the db
         """
-        
+        if isinstance(item, FakeFoodStartURL):
+            return self.store_start_url(item, spider)
+        # elif isinstance(item, BBCGoodFoodItem):
+        #    return self.store_object(item, spider)
+        # else:
+        return self.default(item, spider)
+
+    def default(self, item, spider):
+        spider.logger.info('Processing default pipeline')
+        raise DropItem('Not implemented')
+
+    def store_start_url(self, item, spider):
+        start_url = StartUrl(**item)
+
+        try:
+            # try to add and commit changes to db
+            db.add(start_url)
+            db.commit()
+        except (IntegrityError, DataError) as e:
+            # rollback if failed to commit and log error
+            db.rollback()
+            spider.logger.error(str(e))
         return item

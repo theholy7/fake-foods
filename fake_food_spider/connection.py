@@ -8,7 +8,7 @@ dbpass = 'fake_food'
 dbhost = 'localhost'
 dbname = 'fake_foods'
 
-engine = create_engine("postgres://%s:%s@%s/%s?charset=utf8&use_unicode=0"
+engine = create_engine("postgres://%s:%s@%s/%s"
                        % (dbuser, dbpass, dbhost, dbname),
                        echo=False,
                        pool_recycle=1800)

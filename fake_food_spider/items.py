@@ -11,3 +11,6 @@ import scrapy
 class FakeFoodStartURL(scrapy.Item):
     # define the fields for your item here like:
     url = scrapy.Field()
+    url_hash = scrapy.Field()
+    is_recipe = scrapy.Field()
+    name = scrapy.Field()
