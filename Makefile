@@ -16,6 +16,10 @@ create_db:
 create_tables:
 	python creator.py
 
+## Use psql to check database
+navigate_db:
+	psql -U fake_foodie -d fake_foods
+
 ## Install Python Dependencies
 requirements:
 	pip install -r requirements.txt
