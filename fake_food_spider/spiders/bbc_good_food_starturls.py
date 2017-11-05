@@ -45,8 +45,8 @@ class BbcGoodFoodStarturlsSpider(scrapy.Spider):
             yield start_url_item
 
         # find all other recipe links in that recipe page
-        # for link in response.xpath('//a'):
-        #     next_page_link = link.xpath('@href').extract_first(default='')
-        #     if '/recipes/' in next_page_link:
-        #         url = response.urljoin(next_page_link)
-        #         yield scrapy.Request(url=url, callback=self.parse_recipes)
+        for link in response.xpath('//a'):
+            next_page_link = link.xpath('@href').extract_first(default='')
+            if '/recipes/' in next_page_link:
+                url = response.urljoin(next_page_link)
+                yield scrapy.Request(url=url, callback=self.parse_recipes)

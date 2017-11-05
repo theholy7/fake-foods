@@ -26,6 +26,17 @@ class FakeFoodSpiderPipeline(object):
         raise DropItem('Not implemented')
 
     def store_start_url(self, item, spider):
+        # Check if StartUrl exists in DB
+        exists = (db.query(StartUrl)
+                  .filter_by(name=item['url_hash'])
+                  .first())
+
+        if exists:
+            # If yes, skip it
+            spider.logger.info('Skip already exists item {}'
+                               .format(item['name']))
+            return item
+
         start_url = StartUrl(**item)
 
         try:
