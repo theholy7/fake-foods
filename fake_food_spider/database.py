@@ -23,4 +23,4 @@ class StartUrl(Base):
         self.is_recipe = is_recipe
 
     def __repr__(self):
-        return "<URL: name='%s', is_recipe='%s'>".format(self.name, self.is_recipe)
+        return "<URL: name={}, url={}>".format(self.name, self.url)

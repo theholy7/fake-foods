@@ -28,7 +28,7 @@ class FakeFoodSpiderPipeline(object):
     def store_start_url(self, item, spider):
         # Check if StartUrl exists in DB
         exists = (db.query(StartUrl)
-                  .filter_by(name=item['url_hash'])
+                  .filter_by(url_hash=item['url_hash'])
                   .first())
 
         if exists:
