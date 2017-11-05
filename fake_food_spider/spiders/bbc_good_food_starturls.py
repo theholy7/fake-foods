@@ -10,6 +10,13 @@ def url_hash(url):
     return h.hexdigest()
 
 
+def url_clean(url):
+    if '?' in url:
+        url, params = url.split('?')
+        return url
+    return url
+
+
 class BbcGoodFoodStarturlsSpider(scrapy.Spider):
     name = 'bbc-good-food-starturls'
     allowed_domains = ['bbcgoodfood.com']
@@ -37,10 +44,10 @@ class BbcGoodFoodStarturlsSpider(scrapy.Spider):
         if title_selector:
             start_url_item = FakeFoodStartURL()
             start_url_item['is_recipe'] = True
-            start_url_item['url'] = response.url
+            start_url_item['url'] = url_clean(response.url)
             start_url_item['name'] = (title_selector[0]
                                       .xpath('text()').extract_first())
-            start_url_item['url_hash'] = url_hash(response.url)
+            start_url_item['url_hash'] = url_hash(url_clean(response.url))
 
             yield start_url_item
 
