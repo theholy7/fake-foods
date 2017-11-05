@@ -2,7 +2,7 @@
 
 ## StartUrl spider for BBC Good Food (This takes a while)
 bbc_start_urls:
-	scrapy crawl bbc-good-foods-start-urls
+	scrapy crawl bbc-good-food-starturls
 
 ## Create User in Postgres for the project according to connection.py
 create_user:
