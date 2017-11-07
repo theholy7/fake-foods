@@ -18,7 +18,7 @@ create_tables:
 
 ## Use psql to check database
 navigate_db:
-	psql -U fake_foodie -d fake_foods
+	psql -U fake_foodie -d fake_foods -h 127.0.0.1
 
 ## Install Python Dependencies
 requirements:
