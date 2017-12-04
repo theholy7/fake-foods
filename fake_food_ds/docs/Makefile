@@ -77,17 +77,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/fake-foods-ds.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/fake_food_ds.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/fake-foods-ds.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/fake_food_ds.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/fake-foods-ds"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/fake-foods-ds"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/fake_food_ds"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/fake_food_ds"
 	@echo "# devhelp"
 
 epub:

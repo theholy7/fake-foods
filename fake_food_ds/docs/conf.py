@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# fake-foods-ds documentation build configuration file, created by
+# fake_food_ds documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -41,7 +41,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'fake-foods-ds'
+project = u'fake_food_ds'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -164,7 +164,7 @@ html_static_path = ['_static']
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'fake-foods-dsdoc'
+htmlhelp_basename = 'fake_food_dsdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -184,8 +184,8 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
     ('index',
-     'fake-foods-ds.tex',
-     u'fake-foods-ds Documentation',
+     'fake_food_ds.tex',
+     u'fake_food_ds Documentation',
      u"Jose Antunes", 'manual'),
 ]
 
@@ -215,7 +215,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'fake-foods-ds', u'fake-foods-ds Documentation',
+    ('index', 'fake_food_ds', u'fake_food_ds Documentation',
      [u"Jose Antunes"], 1)
 ]
 
@@ -229,9 +229,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'fake-foods-ds', u'fake-foods-ds Documentation',
-     u"Jose Antunes", 'fake-foods-ds',
-     'A machine learning algorithm to create fake recipes', 'Miscellaneous'),
+    ('index', 'fake_food_ds', u'fake_food_ds Documentation',
+     u"Jose Antunes", 'fake_food_ds',
+     'A project to apply ML to food recipies', 'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.

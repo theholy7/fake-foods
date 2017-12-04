@@ -1,9 +1,9 @@
-.. fake-foods-ds documentation master file, created by
+.. fake_food_ds documentation master file, created by
    sphinx-quickstart.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-fake-foods-ds documentation!
+fake_food_ds documentation!
 ==============================================
 
 Contents:

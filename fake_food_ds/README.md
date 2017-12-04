@@ -1,7 +1,7 @@
-fake-foods-ds
+fake_food_ds
 ==============================
 
-A machine learning algorithm to create fake recipes
+A project to apply ML to food recipies
 
 Project Organization
 ------------
