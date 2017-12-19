@@ -55,5 +55,6 @@ class FoodNetworkStarturlsSpider(scrapy.Spider):
             start_url_item['url'] = url_clean(formated_url)
             start_url_item['name'] = recipe_selector.xpath('./text()').extract_first()
             start_url_item['url_hash'] = url_hash(url_clean(formated_url))
+            start_url_item['s_id'] = self.spider_id
 
             yield start_url_item

@@ -49,6 +49,7 @@ class BbcGoodFoodStarturlsSpider(scrapy.Spider):
             start_url_item['name'] = (title_selector[0]
                                       .xpath('text()').extract_first())
             start_url_item['url_hash'] = url_hash(url_clean(response.url))
+            start_url_item['s_id'] = self.spider_id
 
             yield start_url_item
 
