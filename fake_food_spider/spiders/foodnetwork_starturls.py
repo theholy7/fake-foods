@@ -38,7 +38,7 @@ class FoodNetworkStarturlsSpider(scrapy.Spider):
         last_page = int(pagination_text[-2]) # Last item is 'Next', the one before it is the last page number
 
         for page in range(2, last_page+1):
-            yield scrapy.Request(url=response.urljoin('/p/{}'.format(page)), callback=self.parse_recipes)
+            yield scrapy.Request(url=response.url + '/p/{}'.format(page), callback=self.parse_recipes)
 
 
     def parse_recipes(self, response):
