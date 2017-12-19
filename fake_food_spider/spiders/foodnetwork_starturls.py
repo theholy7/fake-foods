@@ -46,23 +46,13 @@ class FoodNetworkStarturlsSpider(scrapy.Spider):
         recipe_selectors = response.xpath('//ul[@class="m-PromoList o-Capsule__m-PromoList"]//a')
 
         for recipe_selector in recipe_selectors:
+            start_url_item = FakeFoodStartURL()
+            start_url_item['is_recipe'] = True
 
-        # title_xpath = "//h1[@class='recipe-header__title']"
-        # title_selector = response.xpath(title_xpath)
-        #
-        # if title_selector:
-        #     start_url_item = FakeFoodStartURL()
-        #     start_url_item['is_recipe'] = True
-        #     start_url_item['url'] = url_clean(response.url)
-        #     start_url_item['name'] = (title_selector[0]
-        #                               .xpath('text()').extract_first())
-        #     start_url_item['url_hash'] = url_hash(url_clean(response.url))
-        #
-        #     yield start_url_item
-        #
-        # # find all other recipe links in that recipe page
-        # for link in response.xpath('//a'):
-        #     next_page_link = link.xpath('@href').extract_first(default='')
-        #     if '/recipes/' in next_page_link:
-        #         url = response.urljoin(next_page_link)
-        #         yield scrapy.Request(url=url, callback=self.parse_recipes)
+            formated_url = 'http://' + recipe_selector.xpath('./@href').extract_first()[2:]
+
+            start_url_item['url'] = url_clean(formated_url)
+            start_url_item['name'] = recipe_selector.xpath('./text()').extract_first()
+            start_url_item['url_hash'] = url_hash(url_clean(formated_url))
+
+            yield start_url_item
