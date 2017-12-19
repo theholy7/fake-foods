@@ -19,6 +19,7 @@ def url_clean(url):
 
 class BbcGoodFoodStarturlsSpider(scrapy.Spider):
     name = 'bbc-good-food-starturls'
+    spider_id = 1
     allowed_domains = ['bbcgoodfood.com']
     start_urls = ['http://bbcgoodfood.com/']
 

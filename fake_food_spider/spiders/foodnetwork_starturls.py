@@ -18,7 +18,8 @@ def url_clean(url):
 
 
 class FoodNetworkStarturlsSpider(scrapy.Spider):
-    name = 'foodnetwork-starturls'
+    name = 'food-network-starturls'
+    spider_id = 2
     allowed_domains = ['foodnetwork.com']
     start_urls = ['http://www.foodnetwork.com/recipes/a-z/123']
 
