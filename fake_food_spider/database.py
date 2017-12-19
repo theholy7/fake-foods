@@ -12,6 +12,7 @@ class StartUrl(Base):
     name = Column(String(100))
     date = Column(DateTime, default=datetime.utcnow())
     is_recipe = Column(Boolean)
+    s_id = Column(Integer)
 
     def __init__(self, id=None, name=None, url=None, url_hash=None, is_recipe=False):
         self.id = id

@@ -14,6 +14,7 @@ class FakeFoodStartURL(scrapy.Item):
     url_hash = scrapy.Field()
     is_recipe = scrapy.Field()
     name = scrapy.Field()
+    s_id = scrapy.Field()
 
 class FakeFoodRecipe(scrapy.Item):
     url = scrapy.Field()
