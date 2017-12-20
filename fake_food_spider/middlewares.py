@@ -5,7 +5,50 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-from scrapy import signals
+from random import choice
+
+from scrapy import Request, signals
+
+proxies = [{'ip': 'http://62.144.211.124:8080',
+            'banned': False,
+            'usage_count': 0},
+           {'ip': 'http://149.202.61.179:3128',
+            'banned': False,
+            'usage_count': 0}]
+
+
+class ProxyMiddleware(object):
+    # This is the class that manages the proxies
+    # Get a request, add proxy data,
+    # Send the request along
+
+    def process_request(self, request, spider):
+        # We get the request being created
+        # and we add a proxy to it
+
+        request.meta['proxy'] = choice([proxy['ip'] for proxy in proxies
+                                        if not proxy['banned']])
+
+        spider.logger.info("Proxy {} selected".format(request.meta['proxy']))
+
+
+    def process_response(self, request, response, spider):
+
+        if response.status == 403:
+            for proxy in proxies:
+                if request.meta['proxy'] in proxy.values():
+                    proxy['banned'] = True
+
+                    return request
+
+        else:
+            for proxy in proxies:
+                if request.meta['proxy'] in proxy.values():
+                    proxy['usage_count'] += 1
+                    spider.logger.info("Proxy {} used {} times".format(request.meta['proxy'],
+                                                                       proxy['usage_count']))
+
+        return response
 
 
 class FakeFoodSpiderSpiderMiddleware(object):
