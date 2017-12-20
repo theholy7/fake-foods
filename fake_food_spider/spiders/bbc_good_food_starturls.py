@@ -21,19 +21,35 @@ class BbcGoodFoodStarturlsSpider(scrapy.Spider):
     name = 'bbc-good-food-starturls'
     spider_id = 1
     allowed_domains = ['bbcgoodfood.com']
-    start_urls = ['http://bbcgoodfood.com/']
+    start_urls = ['https://www.bbcgoodfood.com/search/collections?query=']
 
     def parse(self, response):
         # collect all /recipes/ urls and make new request
         # check if they have the recipe title class
         # save url as recipe if recipe title class is in html
         # then save an is_recipe = True in the item
+        content = response.xpath('//div[@class="view-content"]//h3/a/@href')
 
-        for link in response.xpath('//a'):
-            next_page_link = link.xpath('@href').extract_first(default='')
-            if '/recipes/' in next_page_link:
-                url = response.urljoin(next_page_link)
-                yield scrapy.Request(url=url, callback=self.parse_recipes)
+        for content_sel in content:
+            content_link = content_sel.extract()
+            self.logger.debug(content_link)
+            if content_link:
+                url = response.urljoin(content_link)
+
+                if '/collection/' in url:
+                    yield scrapy.Request(url=url, callback=self.parse)
+                else:
+                    yield scrapy.Request(url=url, callback=self.parse_recipes)
+
+        #import pdb; pdb.set_trace()
+        next_page = (response
+                        .xpath('//a[@title="Go to next page"]/@href')
+                        .extract_first())
+
+        if next_page:
+            url = response.urljoin(next_page)
+            yield scrapy.Request(url=url, callback=self.parse)
+
 
     def parse_recipes(self, response):
         # check if Recipe name at the top
