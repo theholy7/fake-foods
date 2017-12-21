@@ -175,7 +175,7 @@ class ProxyMiddleware(object):
 
         request.meta['proxy'] = choice(available_proxies)
 
-        spider.logger.info("Proxy {} selected".format(request.meta['proxy']))
+        spider.logger.info("Proxy {} selected for {}".format(request.meta['proxy'], request.url))
 
 
     def process_response(self, request, response, spider):
