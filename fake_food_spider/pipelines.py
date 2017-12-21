@@ -10,8 +10,8 @@ from scrapy.exceptions import DropItem
 from sqlalchemy.exc import DatabaseError, DataError, IntegrityError
 
 from .connection import db
-from .database import StartUrl
-from .items import FakeFoodStartURL
+from .database import StartUrl, Recipe
+from .items import FakeFoodStartURL, FoodNetworkRecipe
 
 
 class FakeFoodSpiderPipeline(object):
@@ -21,8 +21,8 @@ class FakeFoodSpiderPipeline(object):
         """
         if isinstance(item, FakeFoodStartURL):
             return self.store_start_url(item, spider)
-        # elif isinstance(item, BBCGoodFoodItem):
-        #    return self.store_object(item, spider)
+        elif isinstance(item, FoodNetworkRecipe):
+            return self.store_object(item, spider)
         # else:
 
         return self.default(item, spider)
@@ -48,6 +48,30 @@ class FakeFoodSpiderPipeline(object):
         try:
             # try to add and commit changes to db
             db.add(start_url)
+            db.commit()
+        except (IntegrityError, DataError) as e:
+            # rollback if failed to commit and log error
+            db.rollback()
+            spider.logger.error(str(e))
+        return item
+
+    def store_recipe(self, item, spider):
+        # Check if StartUrl exists in DB
+        exists = (db.query(Recipe)
+                  .filter_by(url_hash=item['url_hash'])
+                  .first())
+
+        if exists:
+            # If yes, skip it
+            spider.logger.info('Skip already exists item {}'
+                               .format(item['name']))
+            return item
+
+        recipe = Recipe(**item)
+
+        try:
+            # try to add and commit changes to db
+            db.add(recipe)
             db.commit()
         except (IntegrityError, DataError) as e:
             # rollback if failed to commit and log error
