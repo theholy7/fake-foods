@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import hashlib
 from scrapy.http import Request
 from ..database import StartUrl
 from ..connection import db
-from ..items import FakeFoodRecipe
+from ..items import FoodNetworkRecipe
+from ..loaders import FoodNetworkLoader
 
 def url_hash(url):
     h = hashlib.sha256()
@@ -36,18 +38,16 @@ class FoodNetworkRecipesSpider(scrapy.Spider):
 
     def parse(self, response):
 
-        recipe = FakeFoodRecipe()
+        foodnetwork_loader = FoodNetworkLoader(response=response, item=FoodNetworkRecipe())
 
-        recipe['url'] = url_clean(response.url)
-        recipe['url_hash'] = url_hash(url_clean(response.url))
+        foodnetwork_loader.add_value('url', url_clean(response.url))
+        foodnetwork_loader.add_value('url_hash', url_hash(url_clean(response.url)))
 
+        foodnetwork_loader.add_xpath('name', '//h1[@class="o-AssetTitle__a-Headline"]/span/text()')
 
-        recipe['name'] = response.xpath('//h1[@class="o-AssetTitle__a-Headline"]/span/text()').extract_first()
+        foodnetwork_loader.add_value('date_published', None)
 
-        recipe['date_published'] = None
+        foodnetwork_loader.add_xpath('ingredients', '//div[@class="o-Ingredients__m-Body"]/ul/li/label/text()')
+        foodnetwork_loader.add_xpath('method', '//div[@class="o-Method__m-Body"]/p/text()')
 
-        recipe['ingredients'] = response.xpath('//div[@class="o-Ingredients__m-Body"]/ul/li/label/text()').extract()
-        recipe['method'] = response.xpath('//div[@class="o-Method__m-Body"]/p/text()').extract()
-
-
-        pass
+        return foodnetwork_loader.load_item()
