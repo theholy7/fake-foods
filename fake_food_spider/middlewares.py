@@ -180,11 +180,11 @@ class ProxyMiddleware(object):
 
     def process_response(self, request, response, spider):
 
-        if response.status == 403:
+        if response.status >= 400:
             for proxy in proxies:
                 if request.meta['proxy'] in proxy.values():
                     proxy['banned'] = True
-
+                    spider.logger.info("Proxy {} banned.".format(request.meta['proxy']))
                     return request
 
         else:
