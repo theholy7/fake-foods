@@ -23,3 +23,6 @@ class FakeFoodRecipe(scrapy.Item):
     date_published = scrapy.Field()
     ingredients = scrapy.Field()
     method = scrapy.Field()
+
+class FoodNetworkRecipe(FakeFoodRecipe):
+    pass
