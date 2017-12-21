@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
+
+
 # Define your item pipelines here
 #
+from scrapy.exceptions import DropItem
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-from sqlalchemy.exc import IntegrityError, DataError, DatabaseError
+from sqlalchemy.exc import DatabaseError, DataError, IntegrityError
 
 from .connection import db
 from .database import StartUrl
@@ -21,6 +24,7 @@ class FakeFoodSpiderPipeline(object):
         # elif isinstance(item, BBCGoodFoodItem):
         #    return self.store_object(item, spider)
         # else:
+
         return self.default(item, spider)
 
     def default(self, item, spider):
