@@ -22,7 +22,7 @@ class FakeFoodSpiderPipeline(object):
         if isinstance(item, FakeFoodStartURL):
             return self.store_start_url(item, spider)
         elif isinstance(item, FakeFoodRecipe):
-            return self.store_object(item, spider)
+            return self.store_recipe(item, spider)
         # else:
 
         return self.default(item, spider)
