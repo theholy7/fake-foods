@@ -11,7 +11,7 @@ from sqlalchemy.exc import DatabaseError, DataError, IntegrityError
 
 from .connection import db
 from .database import StartUrl, Recipe
-from .items import FakeFoodStartURL, FoodNetworkRecipe
+from .items import FakeFoodStartURL, FakeFoodRecipe
 
 
 class FakeFoodSpiderPipeline(object):
@@ -21,7 +21,7 @@ class FakeFoodSpiderPipeline(object):
         """
         if isinstance(item, FakeFoodStartURL):
             return self.store_start_url(item, spider)
-        elif isinstance(item, FoodNetworkRecipe):
+        elif isinstance(item, FakeFoodRecipe):
             return self.store_object(item, spider)
         # else:
 
