@@ -27,8 +27,7 @@ class FoodNetworkRecipesSpider(scrapy.Spider):
     def start_requests(self):
         # overwride start_requests to get urls from db
 
-        foodnetwork_starturls = (db.query(StartUrl).filter_by(s_id=2)
-                            .limit(5))
+        foodnetwork_starturls = (db.query(StartUrl).filter_by(s_id=2))
 
         rqs = [ Request(url=start_url.url, callback=self.parse)
                 for start_url in foodnetwork_starturls]
