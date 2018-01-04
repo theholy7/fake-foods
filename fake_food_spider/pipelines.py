@@ -10,8 +10,51 @@ from scrapy.exceptions import DropItem
 from sqlalchemy.exc import DatabaseError, DataError, IntegrityError
 
 from .connection import db
-from .database import StartUrl, Recipe
-from .items import FakeFoodStartURL, FakeFoodRecipe
+from .database import StartUrl, Recipe, Proxy
+from .items import FakeFoodStartURL, FakeFoodRecipe, ProxyItem
+
+
+class ProxyPipeline(object):
+    def process_item(self, item, spider):
+        """
+        Lets process a recipe item, we need to store it in the db
+        """
+        if isinstance(item, ProxyItem):
+            return self.store_proxy(item, spider)
+        elif isinstance(item, FakeFoodRecipe)\
+                or isinstance(item, FakeFoodStartURL):
+            return item
+
+
+        return self.default(item, spider)
+
+    def default(self, item, spider):
+        spider.logger.info('Processing default pipeline')
+        raise DropItem('Not implemented')
+
+    def store_proxy(self, item, spider):
+        # Check if proxy exists in DB
+        exists = (db.query(Proxy)
+                  .filter_by(ip=item['ip'])
+                  .first())
+
+        if exists:
+            # If yes, skip it
+            spider.logger.info('Skip already exists item {}'
+                               .format(item['ip']))
+            return item
+
+        proxy = Proxy(**item)
+
+        try:
+            # try to add and commit changes to db
+            db.add(proxy)
+            db.commit()
+        except (IntegrityError, DataError) as e:
+            # rollback if failed to commit and log error
+            db.rollback()
+            spider.logger.error(str(e))
+        return item
 
 
 class FakeFoodSpiderPipeline(object):

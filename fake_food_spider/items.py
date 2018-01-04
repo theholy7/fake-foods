@@ -26,3 +26,11 @@ class FakeFoodRecipe(scrapy.Item):
 
 class FoodNetworkRecipe(FakeFoodRecipe):
     pass
+
+
+class ProxyItem(scrapy.Item):
+    schema = scrapy.Field()
+    ip = scrapy.Field()
+    port = scrapy.Field()
+    location = scrapy.Field()
+    is_banned = scrapy.Field()

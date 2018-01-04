@@ -2,6 +2,20 @@ from sqlalchemy import Column, String, Integer, DateTime, Boolean
 from .connection import Base
 from datetime import datetime
 
+class Proxy(Base):
+    __tablename__ = 'proxies'
+
+    id = Column(Integer, primary_key=True)
+    schema = Column(String(10), default='http://')
+    ip = Column(String(20))
+    port = Column(String(20))
+    location = Column(String(20), default='--')
+    is_banned = Column(Boolean, default=False)
+    usage_count = Column(Integer, default=0)
+
+
+    def __repr__(self):
+        return "<Proxy: {}:{} - {}>".format(self.ip, self.port, self.location)
 
 class StartUrl(Base):
     __tablename__ = 'start_urls'

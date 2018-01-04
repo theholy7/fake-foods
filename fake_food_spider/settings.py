@@ -53,7 +53,7 @@ DOWNLOAD_DELAY = 1
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-   'fake_food_spider.middlewares.ProxyMiddleware': 543,
+   'fake_food_spider.middlewares.ProxyMiddleware': 1000,
    'fake_food_spider.middlewares.RandomUserAgentMiddleware': 343,
 }
 

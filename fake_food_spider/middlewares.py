@@ -5,44 +5,22 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+from twisted.internet import defer
+from twisted.internet.error import TimeoutError, DNSLookupError, \
+        ConnectionRefusedError, ConnectionDone, ConnectError, \
+        ConnectionLost, TCPTimedOutError
+from twisted.web.client import ResponseFailed
+from scrapy.core.downloader.handlers.http11 import TunnelError
+
 from random import choice
+
+import re
 
 from scrapy import Request, signals
 from scrapy.exceptions import CloseSpider
 
-proxies = [{'ip': 'http://62.144.211.124:8080',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://149.202.61.179:3128',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://212.83.164.85:80',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://149.202.180.55:3128',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://47.52.61.212:8080',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://147.135.210.114:54566',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://23.111.166.114:8080',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://18.217.179.238:8080',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://45.63.114.30:3128',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://13.78.125.167:8080',
-            'banned': False,
-            'usage_count': 0},
-           {'ip': 'http://91.93.132.138:3128',
-            'banned': False,
-            'usage_count': 0}]
+from .connection import db
+from .database import Proxy
 
 USER_AGENT_LIST = [
     'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36',
@@ -163,38 +141,80 @@ class ProxyMiddleware(object):
     # Get a request, add proxy data,
     # Send the request along
 
+    # IOError is raised by the HttpCompression middleware when trying to
+    # decompress an empty response
+    EXCEPTIONS_TO_RETRY = (defer.TimeoutError, TimeoutError, DNSLookupError,
+                           ConnectionRefusedError, ConnectionDone, ConnectError,
+                           ConnectionLost, TCPTimedOutError, ResponseFailed,
+                           IOError, TunnelError)
+
     def process_request(self, request, spider):
         # We get the request being created
         # and we add a proxy to it
 
-        available_proxies = [proxy['ip'] for proxy in proxies
-                                        if not proxy['banned']]
+        available_proxies = db.query(Proxy).filter_by(is_banned=False)
 
-        if len(available_proxies) == 0:
+        if available_proxies.count() == 0:
             raise CloseSpider('No more available proxies.')
 
-        request.meta['proxy'] = choice(available_proxies)
+        available_proxies_ip = [
+            '{}{}:{}'.format(proxy.schema, proxy.ip, proxy.port)
+            for proxy in available_proxies
+        ]
+
+        request.meta['proxy'] = choice(available_proxies_ip)
 
         spider.logger.info("Proxy {} selected for {}".format(request.meta['proxy'], request.url))
 
 
     def process_response(self, request, response, spider):
+        ip = re.sub(r'^https?\:\/\/','',request.meta['proxy']).split(':')[0]
+        proxy = db.query(Proxy).filter_by(ip=ip).first()
 
-        if response.status >= 400:
-            for proxy in proxies:
-                if request.meta['proxy'] in proxy.values():
-                    proxy['banned'] = True
-                    spider.logger.info("Proxy {} banned.".format(request.meta['proxy']))
-                    return request
+        if response.status < 200 or response.status >= 400:
+
+            proxy.is_banned = True
+
+            try:
+                db.commit()
+            except (IntegrityError, DataError) as e:
+                db.rollback()
+                spider.logger.error(str(e))
+
+            spider.logger.info("Proxy {} banned - CODE:{}."
+                               .format(request.meta['proxy'],
+                                          response.status))
+            return request
 
         else:
-            for proxy in proxies:
-                if request.meta['proxy'] in proxy.values():
-                    proxy['usage_count'] += 1
-                    spider.logger.info("Proxy {} used {} times".format(request.meta['proxy'],
-                                                                       proxy['usage_count']))
+            proxy.usage_count += 1
+            spider.logger.info("Proxy {} used {} times".format(request.meta['proxy'],
+                                                               proxy.usage_count))
+            try:
+                db.commit()
+            except (IntegrityError, DataError) as e:
+                db.rollback()
+                spider.logger.error(str(e))
 
         return response
+
+    def process_exception(self, request, exception, spider):
+        if isinstance(exception, self.EXCEPTIONS_TO_RETRY):
+            ip = re.sub(r'^https?\:\/\/','',request.meta['proxy']).split(':')[0]
+            proxy = db.query(Proxy).filter_by(ip=ip).first()
+
+            proxy.is_banned = True
+
+            try:
+                db.commit()
+            except (IntegrityError, DataError) as e:
+                db.rollback()
+                spider.logger.error(str(e))
+
+            spider.logger.info("Proxy {} banned - reason : {}."
+                               .format(request.meta['proxy'],
+                                       exception))
+
 
 
 class FakeFoodSpiderSpiderMiddleware(object):
