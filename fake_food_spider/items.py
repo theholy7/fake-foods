@@ -28,7 +28,7 @@ class FoodNetworkRecipe(FakeFoodRecipe):
     pass
 
 
-class Proxy(scrapy.Item):
+class ProxyItem(scrapy.Item):
     schema = scrapy.Field()
     ip = scrapy.Field()
     port = scrapy.Field()
