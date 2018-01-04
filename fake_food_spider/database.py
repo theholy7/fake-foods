@@ -11,6 +11,8 @@ class Proxy(Base):
     port = Column(String(20))
     location = Column(String(20), default='--')
     is_banned = Column(Boolean, default=False)
+    usage_count = Column(Integer, default=0)
+
 
     def __repr__(self):
         return "<Proxy: {}:{} - {}>".format(self.ip, self.port, self.location)
