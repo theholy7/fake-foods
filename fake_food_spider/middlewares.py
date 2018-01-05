@@ -143,10 +143,7 @@ class ProxyMiddleware(object):
 
     # IOError is raised by the HttpCompression middleware when trying to
     # decompress an empty response
-    EXCEPTIONS_TO_RETRY = (defer.TimeoutError, TimeoutError, DNSLookupError,
-                           ConnectionRefusedError, ConnectionDone, ConnectError,
-                           ConnectionLost, TCPTimedOutError, ResponseFailed,
-                           IOError, TunnelError)
+    EXCEPTIONS_TO_RETRY = (defer.TimeoutError, TimeoutError, ConnectionRefusedError, TCPTimedOutError, TunnelError)
 
     def process_request(self, request, spider):
         # We get the request being created
