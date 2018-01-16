@@ -14,6 +14,17 @@ BOT_NAME = 'fake_food_spider'
 SPIDER_MODULES = ['fake_food_spider.spiders']
 NEWSPIDER_MODULE = 'fake_food_spider.spiders'
 
+# Database credentials and setup
+import os
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv(), verbose=True)
+
+DB_HOST = os.environ.get('DB_HOST', 'localhost')
+DB_USER = os.environ.get('DB_USER', 'fake_foodie')
+DB_PASS = os.environ.get('DB_PASS', 'fake_food')
+DB_NAME = os.environ.get('DB_NAME', 'fake_foods')
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'fake_food_spider'
