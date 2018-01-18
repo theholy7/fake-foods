@@ -2,13 +2,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from scrapy.conf import settings
+from .settings import DB_NAME, DB_USER, DB_HOST, DB_PASS
 
 # db settings
-dbuser = settings['DB_USER']
-dbpass = settings['DB_PASS']
-dbhost = settings['DB_HOST']
-dbname = settings['DB_NAME']
+dbuser = DB_USER
+dbpass = DB_PASS
+dbhost = DB_HOST
+dbname = DB_NAME
 
 engine = create_engine("postgres://%s:%s@%s/%s"
                        % (dbuser, dbpass, dbhost, dbname),
