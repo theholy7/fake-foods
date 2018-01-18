@@ -31,7 +31,7 @@ class StartUrl(Base):
     scrape_date = Column(DateTime)
 
     def __init__(self, id=None, name=None, url=None, url_hash=None,
-                 is_recipe=False, s_id=0, scrape_count=0):
+                 is_recipe=False, s_id=0, scrape_count=0, scrape_date=None):
         self.id = id
         self.url = url
         self.url_hash = url_hash
@@ -39,6 +39,7 @@ class StartUrl(Base):
         self.is_recipe = is_recipe
         self.s_id = s_id
         self.scrape_count = scrape_count
+        self.scrape_date = scrape_date
 
     def __repr__(self):
         return "<URL: name={}, url={}>".format(self.name, self.url)
