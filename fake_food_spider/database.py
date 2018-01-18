@@ -28,7 +28,7 @@ class StartUrl(Base):
     is_recipe = Column(Boolean)
     s_id = Column(Integer)
     scrape_count = Column(Integer, default=0)
-    scrape_date = Column(DateTime, default=datetime.utcnow())
+    scrape_date = Column(DateTime)
 
     def __init__(self, id=None, name=None, url=None, url_hash=None,
                  is_recipe=False, s_id=0, scrape_count=0):
